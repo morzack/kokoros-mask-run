@@ -71,15 +71,15 @@ class Tile:
         return [self.x, self.y]
 
 class Map:
-    def __init__(self, config_file, x_offset):
-        with open(config_file, 'r') as f:
+    def __init__(self, level_config_file, data_dir, x_offset):
+        with open(level_config_file, 'r') as f:
             self.config_data = json.load(f)
         
         self.tileatlas = self.config_data["tileatlas"]
 
-        foreground_data = csv_to_array(self.config_data["foreground"])
-        platform_data = csv_to_array(self.config_data["platforms"])
-        background_data = csv_to_array(self.config_data["background"])
+        foreground_data = csv_to_array(f"{data_dir}/_Objects.csv")
+        platform_data = csv_to_array(f"{data_dir}/_Platforms.csv")
+        background_data = csv_to_array(f"{data_dir}/_Background.csv")
 
         w = self.config_data["tilew"]
         h = self.config_data["tileh"]
@@ -87,7 +87,7 @@ class Map:
         self.platforms = array_to_tiles(platform_data, w, h, self.tileatlas, x_offset)
         self.background = array_to_tiles(background_data, w, h, self.tileatlas, x_offset)
 
-        mask_data = csv_to_array(self.config_data["masks"])
+        mask_data = csv_to_array(f"{data_dir}/_Masks.csv")
         self.masks = array_to_masks(mask_data, x_offset)
 
         self.width = len(foreground_data[0])*w

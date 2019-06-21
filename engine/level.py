@@ -20,6 +20,7 @@ class Level(State):
         
         # load config stuff
         self.level_dir = f"gamedata/levels/{self.name}"
+        self.level_config_file = f"{self.level_dir}/configuration.json"
 
         with open(f"{self.level_dir}/configuration.json", 'r') as f:
             self.level_config_data = json.load(f)
@@ -36,9 +37,11 @@ class Level(State):
 
         self.current_map_offset = 0
 
+        self.get_random_map = lambda: Map(self.level_config_file, random.choice(self.map_part_dirs), self.current_map_offset)
+
         self.map_previous = None
         self.map_current = None
-        self.map_next = Map(f"{random.choice(self.map_part_dirs)}/config.json", self.current_map_offset)
+        self.map_next = self.get_random_map()
         self.cycle_map()
         self.cycle_map()
 
@@ -53,7 +56,7 @@ class Level(State):
         self.map_previous = self.map_current
         self.map_current = self.map_next
         self.current_map_offset += self.map_current.width
-        self.map_next = Map(f"{random.choice(self.map_part_dirs)}/config.json", self.current_map_offset)
+        self.map_next = self.get_random_map()
 
     def process_event(self, event : pygame.event.EventType):
         """
@@ -61,17 +64,26 @@ class Level(State):
         """
         pass
 
-    def draw_map(self, mapIn : Map, surface : pygame.Surface):
-        scrollingSurface = make_new_transparent_surface(surface)
-        offset_x = -(self.player.x-self.player.x%2) + scrollingSurface.get_width()/2
-        offset_y = -self.player.y  + scrollingSurface.get_height()/2
+    def draw_map_back(self, mapIn : Map, surface : pygame.Surface):
+        offset_x = -(self.player.x-self.player.x%2) + surface.get_width()/2
+        offset_y = -self.player.y  + surface.get_height()/2
         # offset_x = -self.player.x
         # offset_y = -self.player.y
-        mapIn.draw_background(scrollingSurface, offset_x, offset_y)
-        mapIn.draw_platforms(scrollingSurface, offset_x, offset_y)
-        mapIn.draw_foreground(scrollingSurface, offset_x, offset_y)
-        mapIn.draw_masks(scrollingSurface, offset_x, offset_y)
-        return scrollingSurface
+        mapIn.draw_background(surface, offset_x, offset_y)
+        mapIn.draw_platforms(surface, offset_x, offset_y)
+        # mapIn.draw_foreground(surface, offset_x, offset_y)
+        mapIn.draw_masks(surface, offset_x, offset_y)
+    
+    def draw_map_front(self, mapIn : Map, surface : pygame.Surface):
+        offset_x = -(self.player.x-self.player.x%2) + surface.get_width()/2
+        offset_y = -self.player.y  + surface.get_height()/2
+        # offset_x = -self.player.x
+        # offset_y = -self.player.y
+        # mapIn.draw_background(scrollingSurface, offset_x, offset_y)
+        # mapIn.draw_platforms(scrollingSurface, offset_x, offset_y)
+        mapIn.draw_foreground(surface, offset_x, offset_y)
+        # mapIn.draw_masks(scrollingSurface, offset_x, offset_y)
+        
 
     def update(self, surface : pygame.Surface, keys_pressed, current_time):
         """
@@ -79,26 +91,28 @@ class Level(State):
         """
         if self.player.x > self.current_map_offset:
             self.cycle_map()
-
-        # the things here are on a surface that should move with the player, ie objects in the world
-        previous_surface = self.draw_map(self.map_previous, surface)
-        current_surface = self.draw_map(self.map_current, surface)
-        next_surface = self.draw_map(self.map_next, surface)
-
+        
         # the things here remain in the same place on the screen at all times
         staticSurface = make_new_transparent_surface(surface)
         self.player.draw_to_surface(staticSurface)
         self.player.update(keys_pressed)
 
         self.score_mask.draw_to_surface(staticSurface, 0, 0)
-        render_text(staticSurface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score}", pygame.Color(255, 0, 0))
         
         # combine the previously created surfaces
         surface.blit(self.background, (0, 0))
-        surface.blit(previous_surface, (0, 0))
-        surface.blit(current_surface, (0, 0))
-        surface.blit(next_surface, (0, 0))
+
+        self.draw_map_back(self.map_previous, surface)
+        self.draw_map_back(self.map_current, surface)
+        self.draw_map_back(self.map_next, surface)
+
         surface.blit(staticSurface, (0, 0))
+
+        self.draw_map_front(self.map_previous, surface)
+        self.draw_map_front(self.map_current, surface)
+        self.draw_map_front(self.map_next, surface)
+
+        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score}", pygame.Color(255, 0, 0))
 
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions_current = self.map_current.check_collisions(player_colliders)
@@ -111,4 +125,4 @@ class Level(State):
         self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
 
         # here's that debug gore statement
-        render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))
+        # render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))

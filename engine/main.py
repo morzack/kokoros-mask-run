@@ -4,6 +4,7 @@ import json
 
 from .userinput import get_input
 from .level import Level
+from .ui import render_text
 
 def main():
     pygame.init()
@@ -34,5 +35,7 @@ def main():
         pygame.event.pump()
         clock.tick(game_config_data["targetFPS"])
         frame += 1
+        
+        render_text(screen, 600, 10, f"FPS: {int(clock.get_fps())}", pygame.Color(0, 255, 0))
 
         pygame.display.flip()
