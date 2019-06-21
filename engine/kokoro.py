@@ -6,6 +6,7 @@ import json
 import math
 
 from .utils import clamp
+from .powerup import Powerup
 
 class Kokoro:
     def __init__(self):
@@ -27,6 +28,8 @@ class Kokoro:
         self.hit_left = False
         self.hit_right = False
         self.hit_top = False
+
+        self.currentEffects = {"speed":0}
 
     def draw_to_surface(self, surface : pygame.Surface):
         # TODO this should be updated when animations are a thing because those are useful/important
@@ -57,14 +60,23 @@ class Kokoro:
     def get_bottom_collider(self):
         bb = self.get_bounding_box()
         bb.y += self.player_config_data["collideroffset"]
-        return bb        
+        return bb
+
+    def apply_powerup(self, powerup : Powerup):
+        self.currentEffects[powerup.effect] = powerup.duration
 
     def update(self, keys_pressed):
+        # update powerups
+        speed_modifier = 1 if self.currentEffects["speed"] <= 0 else 2
+
+        for k in self.currentEffects:
+            self.currentEffects[k] -= 1
+
         # update the position and stuff
         if keys_pressed["left"]:
-            self.dx -= self.player_config_data["lateralacceleration"]
+            self.dx -= self.player_config_data["lateralacceleration"]*speed_modifier
         if keys_pressed["right"]:
-            self.dx += self.player_config_data["lateralacceleration"]
+            self.dx += self.player_config_data["lateralacceleration"]*speed_modifier
 
         # janky lol
         if not self.grounded:

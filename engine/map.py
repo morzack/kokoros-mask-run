@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 
 from .mask import Mask
+from .powerup import Powerup
 
 import json
 
@@ -53,6 +54,21 @@ def array_to_masks(mask_array, x_off):
         i+=1
     return masks
 
+def array_to_powerups(powerup_array, x_off):
+    with open(f"gamedata/powerups.json", 'r') as f:
+        powerup_data = json.load(f)
+
+    powerups = []
+    i = 0
+    for y in powerup_array:
+        j = 0
+        for x in map(str, y):
+            if x in powerup_data["powerupids"]:
+                powerups.append(Powerup(powerup_data["powerupConfig"]["width"]*j+x_off, powerup_data["powerupConfig"]["width"]*i, powerup_data["powerupids"][x]))
+            j+=1
+        i+=1
+    return powerups
+
 def draw_tiles(tiles, surface : pygame.Surface, x_offset, y_offset):
     for t in tiles:
         surface.blit(t.image, (t.x+x_offset, t.y+y_offset))
@@ -90,6 +106,9 @@ class Map:
         mask_data = csv_to_array(f"{data_dir}/_Masks.csv")
         self.masks = array_to_masks(mask_data, x_offset)
 
+        powerup_data = csv_to_array(f"{data_dir}/_Powerups.csv")
+        self.powerups = array_to_powerups(powerup_data, x_offset)
+
         self.width = len(foreground_data[0])*w
 
         self.x = x_offset
@@ -106,6 +125,8 @@ class Map:
     def draw_masks(self, surf : pygame.Surface, x_off, y_off):
         for mask in self.masks:
             mask.draw_to_surface(surf, x_off, y_off)
+        for powerup in self.powerups:
+            powerup.draw_to_surface(surf, x_off, y_off)
 
     def check_collisions(self, othercolliders):
         collisions = [False for i in othercolliders]
@@ -125,3 +146,11 @@ class Map:
                 num_masks_hit += 1
                 mask.active = False
         return num_masks_hit
+
+    def check_powerup_collisions(self, collider):
+        powerups_hit = []
+        for powerup in [x for x in self.powerups if x.active]:
+            if powerup.get_bounding_box().colliderect(collider):
+                powerups_hit.append(powerup)
+                powerup.active = False
+        return powerups_hit

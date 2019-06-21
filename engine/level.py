@@ -124,5 +124,8 @@ class Level(State):
 
         self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
 
+        powerups_hit = self.map_current.check_powerup_collisions(self.player.get_bounding_box())
+        [self.player.apply_powerup(p) for p in powerups_hit]
+
         # here's that debug gore statement
         # render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))

@@ -1,0 +1,17 @@
+{
+    "powerupids" : {
+        "0" : "speed"
+    },
+    "powerupConfig" : {
+        "width" : 50,
+        "height" : 50
+    },
+    "powerups" : [
+        {
+            "name" : "speed",
+            "duration" : 300,
+            "image" : "gamedata/assets/powerups/red_speed.png",
+            "effect" : "speed"
+        }
+    ]
+}
