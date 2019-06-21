@@ -1,0 +1,11 @@
+{
+    "tiledir" : "gamedata/assets/tiles/cave",
+    "background" : "gamedata/levels/testlevel/map/map_Background.csv",
+    "platforms" : "gamedata/levels/testlevel/map/map_Foreground.csv",
+    "foreground" : "gamedata/levels/testlevel/map/map_Objects.csv",
+    
+    "tileatlas" : "gamedata/assets/tiles/cave",
+    
+    "tilew" : 50,
+    "tileh" : 50
+}

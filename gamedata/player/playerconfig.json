@@ -1,0 +1,11 @@
+{
+    "width" : 60,
+    "height" : 80,
+
+    "maxlateralspeed" : 10, 
+    "maxverticalspeed" : 5,
+    "lateralacceleration" : 1,
+    "friction" : 0.8,
+
+    "image" : "gamedata/player/kokoro.png"
+}
