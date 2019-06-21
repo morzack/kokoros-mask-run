@@ -1,8 +1,9 @@
 {
     "tiledir" : "gamedata/assets/tiles/cave",
-    "background" : "gamedata/levels/testlevel/map/map_Background.csv",
-    "platforms" : "gamedata/levels/testlevel/map/map_Foreground.csv",
-    "foreground" : "gamedata/levels/testlevel/map/map_Objects.csv",
+    "background" : "gamedata/levels/testlevel/map/cave_Background.csv",
+    "platforms" : "gamedata/levels/testlevel/map/cave_Foreground.csv",
+    "foreground" : "gamedata/levels/testlevel/map/cave_Objects.csv",
+    "masks" : "gamedata/levels/testlevel/map/cave_Masks.csv",
     
     "tileatlas" : "gamedata/assets/tiles/cave",
     

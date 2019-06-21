@@ -1,0 +1,8 @@
+{
+    "types": {
+        "red": "gamedata/assets/masks/oni.png"
+    },
+
+    "width" : 50,
+    "height" : 50
+}

@@ -3,6 +3,8 @@ import pygame
 from os import listdir
 from os.path import isfile, join
 
+from .mask import Mask
+
 import json
 
 def csv_to_array(filepath):
@@ -35,6 +37,21 @@ def array_to_tiles(array, w, h, tilepath):
             j += 1
         i += 1
     return tiles
+
+def array_to_masks(mask_array):
+    with open(f"gamedata/masks.json", 'r') as f:
+        mask_data = json.load(f)
+
+    masks = []
+    i = 0
+    for y in mask_array:
+        j = 0
+        for x in y:
+            if x != -1:
+                masks.append(Mask(mask_data["width"]*j, mask_data["height"]*i))
+            j+=1
+        i+=1
+    return masks
 
 def draw_tiles(tiles, surface : pygame.Surface, x_offset, y_offset):
     for t in tiles:
@@ -70,6 +87,9 @@ class Map:
         self.platforms = array_to_tiles(platform_data, w, h, self.tileatlas)
         self.background = array_to_tiles(background_data, w, h, self.tileatlas)
 
+        mask_data = csv_to_array(self.config_data["masks"])
+        self.masks = array_to_masks(mask_data)
+
     def draw_foreground(self, surf : pygame.Surface, x_off, y_off):
         draw_tiles(self.foreground, surf, x_off, y_off)
 
@@ -78,6 +98,10 @@ class Map:
 
     def draw_background(self, surf : pygame.Surface, x_off, y_off):
         draw_tiles(self.background, surf, x_off, y_off)
+    
+    def draw_masks(self, surf : pygame.Surface, x_off, y_off):
+        for mask in self.masks:
+            mask.draw_to_surface(surf, x_off, y_off)
 
     def check_collisions(self, othercolliders):
         collisions = [False for i in othercolliders]
@@ -89,3 +113,11 @@ class Map:
                     break
             j+=1
         return collisions
+
+    def check_mask_collisions(self, collider):
+        num_masks_hit = 0
+        for mask in [x for x in self.masks if x.active]:
+            if mask.get_bounding_box().colliderect(collider):
+                num_masks_hit += 1
+                mask.active = False
+        return num_masks_hit

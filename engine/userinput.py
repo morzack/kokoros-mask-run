@@ -5,7 +5,7 @@ def get_input():
     return {
         "left" : keys[pygame.K_LEFT],
         "right" : keys[pygame.K_RIGHT],
-        "up" : keys[pygame.K_UP],
+        "up" : keys[pygame.K_UP] + keys[pygame.K_z],
         "down" : keys[pygame.K_DOWN],
         "enter" : keys[pygame.K_RETURN],
         "space" : keys[pygame.K_SPACE],

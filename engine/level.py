@@ -35,6 +35,8 @@ class Level(State):
 
         self.player = Kokoro()
 
+        self.score = 0
+
     def process_event(self, event : pygame.event.EventType):
         """
         process an event as needed. tl;dr keypresses and stuff
@@ -52,6 +54,7 @@ class Level(State):
         self.map.draw_background(scrollingSurface, offset_x, offset_y)
         self.map.draw_platforms(scrollingSurface, offset_x, offset_y)
         self.map.draw_foreground(scrollingSurface, offset_x, offset_y)
+        self.map.draw_masks(scrollingSurface, offset_x, offset_y)
 
         # the things here remain in the same place on the screen at all times
         staticSurface = make_new_transparent_surface(surface)
@@ -67,5 +70,7 @@ class Level(State):
         player_map_collisions = self.map.check_collisions(player_colliders)
         self.player.grounded = player_map_collisions[0]
 
+        self.score += self.map.check_mask_collisions(self.player.get_bounding_box())
+
         # here's that debug gore statement
-        render_text(surface, 0, 0, f"gnd: {self.player.grounded}", pygame.Color(255, 0, 0))
+        render_text(surface, 0, 0, f"gnd: {self.player.grounded} | scr: {self.score}", pygame.Color(255, 0, 0))
