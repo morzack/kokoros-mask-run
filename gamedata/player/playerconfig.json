@@ -8,7 +8,7 @@
     "friction" : 0.8,
     "gravity" : 0.4,
     "jumppower" : 30,
-    "collideroffset" : 15,
+    "collideroffset" : 12,
 
     "image" : "gamedata/player/kokoro.png"
 }

@@ -3,6 +3,7 @@ from .map import Map
 from .kokoro import Kokoro
 from .utils import make_new_transparent_surface
 from .ui import render_text
+from .mask import Mask
 
 import pygame
 
@@ -46,6 +47,7 @@ class Level(State):
         self.player.x += self.map_previous.width
 
         self.score = 0
+        self.score_mask = Mask(self.game_config_data["scoreX"], self.game_config_data["scoreY"])
 
     def cycle_map(self):
         self.map_previous = self.map_current
@@ -87,6 +89,9 @@ class Level(State):
         staticSurface = make_new_transparent_surface(surface)
         self.player.draw_to_surface(staticSurface)
         self.player.update(keys_pressed)
+
+        self.score_mask.draw_to_surface(staticSurface, 0, 0)
+        render_text(staticSurface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score}", pygame.Color(255, 0, 0))
         
         # combine the previously created surfaces
         surface.blit(self.background, (0, 0))
@@ -96,10 +101,14 @@ class Level(State):
         surface.blit(staticSurface, (0, 0))
 
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
-        player_map_collisions = self.map_current.check_collisions(player_colliders)
-        self.player.hit_left, self.player.hit_right, self.player.hit_top, self.player.grounded = player_map_collisions
+        player_map_collisions_current = self.map_current.check_collisions(player_colliders)
+        player_map_collisions_next = self.map_next.check_collisions(player_colliders)
+        self.player.hit_left = player_map_collisions_current[0] or player_map_collisions_next[0]
+        self.player.hit_right = player_map_collisions_current[1] or player_map_collisions_next[1]
+        self.player.hit_top = player_map_collisions_current[2] or player_map_collisions_next[2]
+        self.player.grounded = player_map_collisions_current[3] or player_map_collisions_next[3]
 
         self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
 
         # here's that debug gore statement
-        render_text(surface, 0, 0, f"x: {self.player.x} | mapbnd: {self.current_map_offset} | scr: {self.score}", pygame.Color(255, 0, 0))
+        render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))

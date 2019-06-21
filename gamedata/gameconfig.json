@@ -5,5 +5,9 @@
     "targetFPS" : 60,
 
     "fontname" : "DejaVu Sans, Arial",
-    "fontsize" : 30
+    "fontsize" : 40,
+
+    "scoreX" : 10,
+    "scoreY" : 10,
+    "scoreTextOffsetY" : 15
 }
