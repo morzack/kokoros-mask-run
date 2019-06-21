@@ -11,7 +11,7 @@ class Kokoro:
         with open(f"gamedata/player/playerconfig.json", 'r') as f:
             self.player_config_data = json.load(f)
 
-        self.x = 0
+        self.x = 100
         self.y = 0
 
         self.dx = 0
@@ -21,6 +21,8 @@ class Kokoro:
 
         self.image = pygame.image.load(self.player_config_data["image"])
         self.image = pygame.transform.scale(self.image, (self.player_config_data["width"], self.player_config_data["height"]))
+
+        self.grounded = False
 
     def draw_to_surface(self, surface : pygame.Surface):
         # TODO this should be updated when animations are a thing because those are useful/important
@@ -39,6 +41,14 @@ class Kokoro:
             self.dx -= self.player_config_data["lateralacceleration"]
         if keys_pressed["right"]:
             self.dx += self.player_config_data["lateralacceleration"]
+
+        # janky lol
+        if not self.grounded:
+            self.dy += self.player_config_data["gravity"]
+        if self.grounded and self.dy > 0:
+            self.dy = 0
+        if self.grounded and keys_pressed["up"]:
+            self.dy -= self.player_config_data["jumppower"]
 
         self.dx *= self.player_config_data["friction"]
         

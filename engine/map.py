@@ -78,3 +78,14 @@ class Map:
 
     def draw_background(self, surf : pygame.Surface, x_off, y_off):
         draw_tiles(self.background, surf, x_off, y_off)
+
+    def check_collisions(self, othercolliders):
+        collisions = [False for i in othercolliders]
+        j = 0
+        for collider in othercolliders:
+            for platform in self.platforms:
+                if platform.bounding_box.colliderect(collider):
+                    collisions[j] = True
+                    break
+            j+=1
+        return collisions

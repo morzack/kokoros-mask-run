@@ -2,6 +2,7 @@ from .state import State
 from .map import Map
 from .kokoro import Kokoro
 from .utils import make_new_transparent_surface
+from .ui import render_text
 
 import pygame
 
@@ -46,9 +47,11 @@ class Level(State):
         """
         # the things here are on a surface that should move with the player, ie objects in the world
         scrollingSurface = make_new_transparent_surface(surface)
-        self.map.draw_background(scrollingSurface, -self.player.x, -self.player.y)
-        self.map.draw_platforms(scrollingSurface, -self.player.x, -self.player.y)
-        self.map.draw_foreground(scrollingSurface, -self.player.x, -self.player.y)
+        offset_x = -self.player.x + scrollingSurface.get_width()/2
+        offset_y = -self.player.y + scrollingSurface.get_height()/2
+        self.map.draw_background(scrollingSurface, offset_x, offset_y)
+        self.map.draw_platforms(scrollingSurface, offset_x, offset_y)
+        self.map.draw_foreground(scrollingSurface, offset_x, offset_y)
 
         # the things here remain in the same place on the screen at all times
         staticSurface = make_new_transparent_surface(surface)
@@ -59,3 +62,10 @@ class Level(State):
         surface.blit(self.background, (0, 0))
         surface.blit(scrollingSurface, (0, 0))
         surface.blit(staticSurface, (0, 0))
+
+        player_colliders = [self.player.get_bounding_box()]
+        player_map_collisions = self.map.check_collisions(player_colliders)
+        self.player.grounded = player_map_collisions[0]
+
+        # here's that debug gore statement
+        render_text(surface, 0, 0, f"gnd: {self.player.grounded}", pygame.Color(255, 0, 0))

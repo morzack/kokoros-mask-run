@@ -2,5 +2,8 @@
     "width" : 800,
     "height" : 500,
     "title" : "Kokoro's Mask Run!",
-    "targetFPS" : 60
+    "targetFPS" : 60,
+
+    "fontname" : "DejaVu Sans, Arial",
+    "fontsize" : 30
 }

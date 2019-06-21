@@ -3,9 +3,11 @@
     "height" : 80,
 
     "maxlateralspeed" : 10, 
-    "maxverticalspeed" : 5,
+    "maxverticalspeed" : 10,
     "lateralacceleration" : 1,
     "friction" : 0.8,
+    "gravity" : 0.4,
+    "jumppower" : 30,
 
     "image" : "gamedata/player/kokoro.png"
 }
