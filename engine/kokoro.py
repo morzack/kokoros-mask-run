@@ -3,6 +3,7 @@
 import pygame
 
 import json
+import math
 
 from .utils import clamp
 
@@ -23,6 +24,9 @@ class Kokoro:
         self.image = pygame.transform.scale(self.image, (self.player_config_data["width"], self.player_config_data["height"]))
 
         self.grounded = False
+        self.hit_left = False
+        self.hit_right = False
+        self.hit_top = False
 
     def draw_to_surface(self, surface : pygame.Surface):
         # TODO this should be updated when animations are a thing because those are useful/important
@@ -34,6 +38,26 @@ class Kokoro:
 
     def get_bounding_box(self):
         return pygame.Rect(self.x, self.y, self.player_config_data["width"], self.player_config_data["height"])
+
+    def get_left_collider(self):
+        bb = self.get_bounding_box()
+        bb.x -= self.player_config_data["collideroffset"]
+        return bb
+    
+    def get_right_collider(self):
+        bb = self.get_bounding_box()
+        bb.x += self.player_config_data["collideroffset"]
+        return bb
+
+    def get_top_collider(self):
+        bb = self.get_bounding_box()
+        bb.y -= self.player_config_data["collideroffset"]
+        return bb
+    
+    def get_bottom_collider(self):
+        bb = self.get_bounding_box()
+        bb.y += self.player_config_data["collideroffset"]
+        return bb        
 
     def update(self, keys_pressed):
         # update the position and stuff
@@ -49,6 +73,12 @@ class Kokoro:
             self.dy = 0
         if self.grounded and keys_pressed["up"]:
             self.dy -= self.player_config_data["jumppower"]
+        if self.hit_left and self.dx < 0:
+            self.dx = 0
+        if self.hit_right and self.dx > 0:
+            self.dx = 0
+        if self.hit_top and self.dy < 0:
+            self.dy = 1
 
         self.dx *= self.player_config_data["friction"]
         
@@ -58,9 +88,9 @@ class Kokoro:
         m_speed = self.player_config_data["maxverticalspeed"]
         self.dy = clamp(self.dy, -m_speed, m_speed)
 
-        if self.dx < -0.1:
+        if self.dx < -self.player_config_data["lateralacceleration"]:
             self.facing_right = False
-        if self.dx > 0.1:
+        if self.dx > self.player_config_data["lateralacceleration"]:
             self.facing_right = True
 
         self.x += self.dx

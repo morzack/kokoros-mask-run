@@ -61,7 +61,7 @@ class Level(State):
 
     def draw_map(self, mapIn : Map, surface : pygame.Surface):
         scrollingSurface = make_new_transparent_surface(surface)
-        offset_x = -self.player.x + scrollingSurface.get_width()/2
+        offset_x = -(self.player.x-self.player.x%2) + scrollingSurface.get_width()/2
         offset_y = -self.player.y  + scrollingSurface.get_height()/2
         # offset_x = -self.player.x
         # offset_y = -self.player.y
@@ -75,6 +75,9 @@ class Level(State):
         """
         update the level and components or whatever
         """
+        if self.player.x > self.current_map_offset:
+            self.cycle_map()
+
         # the things here are on a surface that should move with the player, ie objects in the world
         previous_surface = self.draw_map(self.map_previous, surface)
         current_surface = self.draw_map(self.map_current, surface)
@@ -92,11 +95,11 @@ class Level(State):
         surface.blit(next_surface, (0, 0))
         surface.blit(staticSurface, (0, 0))
 
-        player_colliders = [self.player.get_bounding_box()]
+        player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions = self.map_current.check_collisions(player_colliders)
-        self.player.grounded = player_map_collisions[0]
+        self.player.hit_left, self.player.hit_right, self.player.hit_top, self.player.grounded = player_map_collisions
 
         self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
 
         # here's that debug gore statement
-        render_text(surface, 0, 0, f"gnd: {self.player.grounded} | scr: {self.score}", pygame.Color(255, 0, 0))
+        render_text(surface, 0, 0, f"x: {self.player.x} | mapbnd: {self.current_map_offset} | scr: {self.score}", pygame.Color(255, 0, 0))
