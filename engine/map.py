@@ -23,7 +23,7 @@ def csv_to_array(filepath):
 
     return out
 
-def array_to_tiles(array, w, h, tilepath):
+def array_to_tiles(array, w, h, tilepath, x_off):
     # make sure to use this lol:
     # https://ezgif.com/sprite-cutter/
     # god tier resource
@@ -33,12 +33,12 @@ def array_to_tiles(array, w, h, tilepath):
         j = 0
         for x in y:
             if x != -1:
-                tiles.append(Tile(f"{tilepath}/tile{str(x).zfill(3)}.png", j*w, i*h, w, h))
+                tiles.append(Tile(f"{tilepath}/tile{str(x).zfill(3)}.png", j*w+x_off, i*h, w, h))
             j += 1
         i += 1
     return tiles
 
-def array_to_masks(mask_array):
+def array_to_masks(mask_array, x_off):
     with open(f"gamedata/masks.json", 'r') as f:
         mask_data = json.load(f)
 
@@ -48,7 +48,7 @@ def array_to_masks(mask_array):
         j = 0
         for x in y:
             if x != -1:
-                masks.append(Mask(mask_data["width"]*j, mask_data["height"]*i))
+                masks.append(Mask(mask_data["width"]*j+x_off, mask_data["height"]*i))
             j+=1
         i+=1
     return masks
@@ -71,7 +71,7 @@ class Tile:
         return [self.x, self.y]
 
 class Map:
-    def __init__(self, config_file):
+    def __init__(self, config_file, x_offset):
         with open(config_file, 'r') as f:
             self.config_data = json.load(f)
         
@@ -83,12 +83,16 @@ class Map:
 
         w = self.config_data["tilew"]
         h = self.config_data["tileh"]
-        self.foreground = array_to_tiles(foreground_data, w, h, self.tileatlas)
-        self.platforms = array_to_tiles(platform_data, w, h, self.tileatlas)
-        self.background = array_to_tiles(background_data, w, h, self.tileatlas)
+        self.foreground = array_to_tiles(foreground_data, w, h, self.tileatlas, x_offset)
+        self.platforms = array_to_tiles(platform_data, w, h, self.tileatlas, x_offset)
+        self.background = array_to_tiles(background_data, w, h, self.tileatlas, x_offset)
 
         mask_data = csv_to_array(self.config_data["masks"])
-        self.masks = array_to_masks(mask_data)
+        self.masks = array_to_masks(mask_data, x_offset)
+
+        self.width = len(foreground_data[0])*w
+
+        self.x = x_offset
 
     def draw_foreground(self, surf : pygame.Surface, x_off, y_off):
         draw_tiles(self.foreground, surf, x_off, y_off)

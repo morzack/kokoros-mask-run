@@ -1,0 +1,12 @@
+{
+    "tiledir" : "gamedata/assets/tiles/cave",
+    "background" : "gamedata/levels/testlevel/mapParts/map_two things/test1_Background.csv",
+    "platforms" : "gamedata/levels/testlevel/mapParts/map_two things/test1_Platforms.csv",
+    "foreground" : "gamedata/levels/testlevel/mapParts/map_two things/test1_Objects.csv",
+    "masks" : "gamedata/levels/testlevel/mapParts/map_two things/test1_Masks.csv",
+    
+    "tileatlas" : "gamedata/assets/tiles/cave",
+    
+    "tilew" : 50,
+    "tileh" : 50
+}

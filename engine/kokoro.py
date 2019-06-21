@@ -26,11 +26,11 @@ class Kokoro:
 
     def draw_to_surface(self, surface : pygame.Surface):
         # TODO this should be updated when animations are a thing because those are useful/important
-        # surface.blit(self.image, (self.x, self.y)) # don't want this because kokoro should stay in the center
         i = self.image
         if self.facing_right:
             i = pygame.transform.flip(i, True, False)
         surface.blit(i, (surface.get_width()/2, surface.get_height()/2))
+        # surface.blit(i, (self.x, self.y)) # don't want this because kokoro should stay in the center
 
     def get_bounding_box(self):
         return pygame.Rect(self.x, self.y, self.player_config_data["width"], self.player_config_data["height"])

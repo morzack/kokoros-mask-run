@@ -1,3 +1,6 @@
 {
-    
+    "map_parts" : [
+        "gamedata/levels/testlevel/mapParts/map_flat",
+        "gamedata/levels/testlevel/mapParts/map_two things"
+    ]
 }
