@@ -1,6 +1,18 @@
 {
     "map_parts" : [
-        "gamedata/levels/testlevel/mapParts/mario1"
+        "gamedata/levels/testlevel/mapParts/mario1",
+        "gamedata/levels/testlevel/mapParts/mario2",
+        "gamedata/levels/testlevel/mapParts/mario3",
+        "gamedata/levels/testlevel/mapParts/mario4",
+        "gamedata/levels/testlevel/mapParts/mario5",
+        "gamedata/levels/testlevel/mapParts/mario6",
+        "gamedata/levels/testlevel/mapParts/mario7",
+        "gamedata/levels/testlevel/mapParts/mario8",
+        "gamedata/levels/testlevel/mapParts/mario9",
+        "gamedata/levels/testlevel/mapParts/mario10",
+        "gamedata/levels/testlevel/mapParts/mario11",
+        "gamedata/levels/testlevel/mapParts/mario12",
+        "gamedata/levels/testlevel/mapParts/mario13"
     ],
     "tileatlas" : "gamedata/assets/tiles/town",
     

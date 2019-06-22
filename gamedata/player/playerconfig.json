@@ -2,6 +2,9 @@
     "width" : 60,
     "height" : 60,
 
+    "bboxwidth" : 40,
+    "bboxheight" : 40,
+
     "maxlateralspeed" : 15, 
     "maxverticalspeed" : 15,
     "lateralacceleration" : 1,
@@ -13,7 +16,7 @@
 
     "image" : "gamedata/player/animations/walking/0.png",
 
-    "bottomoffset" : 10,
+    "bottomoffset" : -10,
 
     "animations" : {
         "walking" : 8

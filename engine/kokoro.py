@@ -65,7 +65,7 @@ class Kokoro:
         # surface.blit(i, (self.x, self.y)) # don't want this because kokoro should stay in the center
 
     def get_bounding_box(self):
-        return pygame.Rect(self.x, self.y, self.player_config_data["width"], self.player_config_data["height"])
+        return pygame.Rect(self.x, self.y, self.player_config_data["bboxwidth"], self.player_config_data["bboxheight"])
 
     def get_left_collider(self):
         bb = self.get_bounding_box()
@@ -124,6 +124,8 @@ class Kokoro:
             self.dx = 0
         if self.hit_top and self.dy < 0:
             self.dy = 0
+        if self.hit_left and self.hit_right:
+            self.dx = -1
 
         # if self.grounded:
         self.dx *= self.player_config_data["friction"]
