@@ -98,6 +98,9 @@ class Level(State):
         """
         update the level and components or whatever
         """
+        # lul
+        keys_pressed["right"] = True
+
         if keys_pressed["down"]:
             self.level_over = True
         if self.player.x > self.current_map_offset:
@@ -126,7 +129,7 @@ class Level(State):
         self.draw_map_front(self.map_current, surface)
         self.draw_map_front(self.map_next, surface)
 
-        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score} / {self.mask_goal}", pygame.Color(255, 0, 0))
+        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score} / {self.mask_goal}", pygame.Color(255, 255, 255))
 
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions_current = self.map_current.check_collisions(player_colliders)

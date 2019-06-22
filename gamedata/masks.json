@@ -1,6 +1,6 @@
 {
     "types": {
-        "red": "gamedata/assets/masks/oni.png"
+        "default": "gamedata/assets/masks/kokorodefault.png"
     },
 
     "width" : 50,

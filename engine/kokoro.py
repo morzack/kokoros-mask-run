@@ -59,7 +59,7 @@ class Kokoro:
 
         if not self.facing_right:
             i = pygame.transform.flip(i, True, False)
-        surface.blit(i, (surface.get_width()/2, surface.get_height()/2))
+        surface.blit(i, (surface.get_width()/2, self.player_config_data["bottomoffset"]+surface.get_height()/2))
         # surface.blit(i, (self.x, self.y)) # don't want this because kokoro should stay in the center
 
     def get_bounding_box(self):

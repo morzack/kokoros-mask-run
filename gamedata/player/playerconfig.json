@@ -2,16 +2,18 @@
     "width" : 80,
     "height" : 80,
 
-    "maxlateralspeed" : 10, 
+    "maxlateralspeed" : 15, 
     "maxverticalspeed" : 12,
     "lateralacceleration" : 1,
-    "friction" : 0.8,
+    "friction" : 0.85,
     "gravity" : 0.4,
     "jumppower" : 30,
     "collideroffset" : 12,
     "framerate" : 10,
 
     "image" : "gamedata/player/animations/walking/0.png",
+
+    "bottomoffset" : 10,
 
     "animations" : {
         "walking" : 8

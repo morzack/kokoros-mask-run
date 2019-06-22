@@ -1,11 +1,8 @@
 {
     "map_parts" : [
-        "gamedata/levels/testlevel/mapParts/map_flat",
-        "gamedata/levels/testlevel/mapParts/map_two things",
-        "gamedata/levels/testlevel/mapParts/map_flat_long",
-        "gamedata/levels/testlevel/mapParts/map_ramp_1"
+        "gamedata/levels/testlevel/mapParts/template"
     ],
-    "tileatlas" : "gamedata/assets/tiles/cave",
+    "tileatlas" : "gamedata/assets/tiles/town",
     
     "tilew" : 50,
     "tileh" : 50,
