@@ -10,7 +10,7 @@ class Powerup:
 
         powerup_config = [i for i in config["powerups"] if i["name"] == name][0]
     
-        self.image = pygame.image.load(powerup_config["image"])
+        self.image = pygame.image.load(powerup_config["image"]).convert_alpha()
         self.image = pygame.transform.scale(self.image, (config["powerupConfig"]["width"], config["powerupConfig"]["height"]))
 
         self.duration = powerup_config["duration"]

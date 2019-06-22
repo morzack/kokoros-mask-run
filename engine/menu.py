@@ -34,7 +34,7 @@ class Menu(State):
             self.selected_option = 0
         
         if "image_location" in self.menu_config:
-            self.image = pygame.image.load(self.menu_config["image_location"])
+            self.image = pygame.image.load(self.menu_config["image_location"]).convert()
         else:
             self.image = None
 

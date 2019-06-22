@@ -21,12 +21,12 @@ class Kokoro:
 
         self.facing_right = True
 
-        self.image = pygame.image.load(self.player_config_data["image"])
+        self.image = pygame.image.load(self.player_config_data["image"]).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.player_config_data["width"], self.player_config_data["height"]))
 
         self.walking_frames = []
         for i in range(self.player_config_data["animations"]["walking"]):
-            im = pygame.image.load(f"gamedata/player/animations/walking/{i}.png")
+            im = pygame.image.load(f"gamedata/player/animations/walking/{i}.png").convert_alpha()
             im = pygame.transform.scale(im, (self.player_config_data["width"], self.player_config_data["height"]))
             self.walking_frames.append(im)
         

@@ -75,7 +75,7 @@ def draw_tiles(tiles, surface : pygame.Surface, x_offset, y_offset):
 
 class Tile:
     def __init__(self, imagepath, pos_x, pos_y, width, height):
-        self.image = pygame.image.load(imagepath)
+        self.image = pygame.image.load(imagepath).convert_alpha()
         self.image = pygame.transform.scale(self.image, (width, height))
         self.x = pos_x
         self.y = pos_y

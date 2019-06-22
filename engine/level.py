@@ -29,10 +29,10 @@ class Level(State):
             self.game_config_data = json.load(f)
 
         # load assets
-        self.background = pygame.image.load(f"{self.level_dir}/background.png")
+        self.background = pygame.image.load(f"{self.level_dir}/background.png").convert()
         self.background = pygame.transform.scale(self.background, (self.game_config_data["width"], self.game_config_data["height"]))
 
-        self.background = pygame.image.load(f"{self.level_config_data['background']}")
+        self.background = pygame.image.load(f"{self.level_config_data['background']}").convert()
         bg_height = self.background.get_height()
         scale_up_ratio = self.game_config_data["height"]/bg_height
         self.background = pygame.transform.scale(self.background, (int(self.background.get_width()*scale_up_ratio), int(self.background.get_height()*scale_up_ratio)))

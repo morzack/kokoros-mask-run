@@ -10,7 +10,7 @@ class Mask:
 
         self.mask_type, self.image_path = random.choice(list(all_mask_data["types"].items()))
 
-        self.image = pygame.image.load(self.image_path)
+        self.image = pygame.image.load(self.image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (all_mask_data["width"], all_mask_data["height"]))
         
         self.x = x
