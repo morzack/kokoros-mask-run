@@ -32,6 +32,11 @@ class Level(State):
         self.background = pygame.image.load(f"{self.level_dir}/background.png")
         self.background = pygame.transform.scale(self.background, (self.game_config_data["width"], self.game_config_data["height"]))
 
+        self.background = pygame.image.load(f"{self.level_config_data['background']}")
+        bg_height = self.background.get_height()
+        scale_up_ratio = self.game_config_data["height"]/bg_height
+        self.background = pygame.transform.scale(self.background, (int(self.background.get_width()*scale_up_ratio), int(self.background.get_height()*scale_up_ratio)))
+
         # load map parts into memory
         self.map_part_dirs = self.level_config_data["map_parts"]
 
@@ -106,7 +111,10 @@ class Level(State):
         self.score_mask.draw_to_surface(staticSurface, 0, 0)
         
         # combine the previously created surfaces
-        surface.blit(self.background, (0, 0))
+        scaled_player_x = self.player.x * self.level_config_data["scrollratio"]
+        scaled_player_x = scaled_player_x % self.background.get_width()
+        surface.blit(self.background, (-scaled_player_x, 0))
+        surface.blit(self.background, (-scaled_player_x+self.background.get_width(), 0))
 
         self.draw_map_back(self.map_previous, surface)
         self.draw_map_back(self.map_current, surface)

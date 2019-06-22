@@ -8,5 +8,9 @@
     "tileatlas" : "gamedata/assets/tiles/cave",
     
     "tilew" : 50,
-    "tileh" : 50
+    "tileh" : 50,
+
+    "background" : "gamedata/levels/testlevel/villagebackground.png",
+    "backgroundwidth" : 2000,
+    "scrollratio" : 0.3
 }
