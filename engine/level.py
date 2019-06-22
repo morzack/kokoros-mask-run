@@ -144,10 +144,13 @@ class Level(State):
         powerups_hit = self.map_current.check_powerup_collisions(self.player.get_bounding_box())
         [self.player.apply_powerup(p) for p in powerups_hit]
 
+        if self.map_current.check_enemy_collisions(self.player.get_bounding_box()):
+            self.level_over = True
+
         completion_percent = self.score/self.mask_goal
         if completion_percent >= 1:
             # yay, you won. good job.
             pass
 
         # here's that debug gore statement
-        # render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))
+        render_text(surface, 0, 50, f"col: {player_map_collisions_current}", pygame.Color(255, 0, 0))

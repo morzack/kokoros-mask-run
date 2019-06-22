@@ -5,6 +5,7 @@ from os.path import isfile, join
 
 from .mask import Mask
 from .powerup import Powerup
+from .enemy import Enemy
 
 import json
 
@@ -69,6 +70,24 @@ def array_to_powerups(powerup_array, x_off):
         i+=1
     return powerups
 
+def array_to_enemies(enemy_array, x_off):
+    with open(f"gamedata/enemies/config.json", 'r') as f:
+        enemy_data = json.load(f)
+
+    w = enemy_data["width"]
+    h = enemy_data["height"]
+
+    enemies = []
+    i = 0
+    for y in enemy_array:
+        j = 0
+        for x in map(str, y):
+            if x in enemy_data["enemyids"]:
+                enemies.append(Enemy(x, w*j+x_off, h*i))
+            j+=1
+        i+=1
+    return enemies
+
 def draw_tiles(tiles, surface : pygame.Surface, x_offset, y_offset):
     for t in tiles:
         surface.blit(t.image, (t.x+x_offset, t.y+y_offset))
@@ -109,6 +128,9 @@ class Map:
         powerup_data = csv_to_array(f"{data_dir}/_Powerups.csv")
         self.powerups = array_to_powerups(powerup_data, x_offset)
 
+        enemy_data = csv_to_array(f"{data_dir}/_Enemies.csv")
+        self.enemies = array_to_enemies(enemy_data, x_offset)
+
         self.width = len(foreground_data[0])*w
 
         self.x = x_offset
@@ -127,6 +149,8 @@ class Map:
             mask.draw_to_surface(surf, x_off, y_off)
         for powerup in self.powerups:
             powerup.draw_to_surface(surf, x_off, y_off)
+        for enemy in self.enemies:
+            enemy.draw_to_surface(surf, x_off, y_off)
 
     def check_collisions(self, othercolliders):
         collisions = [False for i in othercolliders]
@@ -154,3 +178,9 @@ class Map:
                 powerups_hit.append(powerup)
                 powerup.active = False
         return powerups_hit
+    
+    def check_enemy_collisions(self, collider):
+        for enemy in self.enemies:
+            if enemy.get_bounding_box().colliderect(collider):
+                return True
+        return False

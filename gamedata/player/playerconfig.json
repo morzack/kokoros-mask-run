@@ -1,13 +1,13 @@
 {
-    "width" : 80,
-    "height" : 80,
+    "width" : 70,
+    "height" : 70,
 
     "maxlateralspeed" : 15, 
-    "maxverticalspeed" : 12,
+    "maxverticalspeed" : 15,
     "lateralacceleration" : 1,
     "friction" : 0.85,
     "gravity" : 0.4,
-    "jumppower" : 30,
+    "jumppower" : 12.5,
     "collideroffset" : 12,
     "framerate" : 10,
 

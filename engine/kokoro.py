@@ -96,9 +96,9 @@ class Kokoro:
             self.currentEffects[k] -= 1
 
         # update the position and stuff
-        if keys_pressed["left"]:
+        if keys_pressed["left"] and self.grounded:
             self.dx -= self.player_config_data["lateralacceleration"]*speed_modifier
-        if keys_pressed["right"]:
+        if keys_pressed["right"] and self.grounded:
             self.dx += self.player_config_data["lateralacceleration"]*speed_modifier
 
         # janky lol
@@ -115,7 +115,8 @@ class Kokoro:
         if self.hit_top and self.dy < 0:
             self.dy = 1
 
-        self.dx *= self.player_config_data["friction"]
+        if self.grounded:
+            self.dx *= self.player_config_data["friction"]
         
         # clamp speed in a shitty way because why not
         m_speed = self.player_config_data["maxlateralspeed"]

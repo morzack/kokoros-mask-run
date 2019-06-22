@@ -1,0 +1,10 @@
+{
+    "width" : 50,
+    "height" : 50,
+
+    "enemyids" : {
+        "1" : "brambles"
+    },
+
+    "1" : "gamedata/enemies/koishbrambles.png"
+}
