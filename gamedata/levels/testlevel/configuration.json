@@ -14,6 +14,10 @@
         "gamedata/levels/testlevel/mapParts/mario12",
         "gamedata/levels/testlevel/mapParts/mario13"
     ],
+    "blankmap" : "gamedata/levels/testlevel/mapParts/blankmap",
+    "startmap" : "gamedata/levels/testlevel/mapParts/startmap",
+    "halfplatform" : "gamedata/levels/testlevel/mapParts/halfmap",
+    "endplatform" : "gamedata/levels/testlevel/mapParts/endmap",
     "tileatlas" : "gamedata/assets/tiles/town",
     
     "tilew" : 50,

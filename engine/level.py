@@ -44,10 +44,15 @@ class Level(State):
 
         self.get_random_map = lambda: Map(self.level_config_file, random.choice(self.map_part_dirs), self.current_map_offset)
 
+        self.platforms_passed = -1
+
+        self.mask_goal = self.game_config_data["maskgoal"]
+
         self.map_previous = None
-        self.map_current = None
-        self.map_next = self.get_random_map()
-        self.cycle_map()
+        self.map_current = Map(self.level_config_file, self.level_config_data["blankmap"], self.current_map_offset)
+        self.map_next = Map(self.level_config_file, self.level_config_data["startmap"], self.map_current.width)
+        self.current_map_offset = self.map_current.width
+        self.map_next.masks = []
         self.cycle_map()
 
         self.player = Kokoro()
@@ -57,8 +62,6 @@ class Level(State):
         self.score = 0
         self.score_mask = Mask(self.game_config_data["scoreX"], self.game_config_data["scoreY"])
 
-        self.mask_goal = self.game_config_data["maskgoal"]
-
         self.level_over = False
 
         self.cam_x = self.player.x
@@ -67,7 +70,13 @@ class Level(State):
         self.map_previous = self.map_current
         self.map_current = self.map_next
         self.current_map_offset += self.map_current.width
-        self.map_next = self.get_random_map()
+        if self.platforms_passed == int(self.mask_goal/2):
+            self.map_next = Map(self.level_config_file, self.level_config_data["halfplatform"], self.current_map_offset)
+        elif self.platforms_passed == int(self.mask_goal)-1:
+            self.map_next = Map(self.level_config_file, self.level_config_data["endplatform"], self.current_map_offset, end=True)
+        else:
+            self.map_next = self.get_random_map()
+        self.platforms_passed += 1
 
     def process_event(self, event : pygame.event.EventType):
         """
@@ -78,7 +87,7 @@ class Level(State):
     def calc_x_offset(self):
         return -(self.cam_x-self.cam_x%2)
 
-    def draw_map_back(self, mapIn : Map, surface : pygame.Surface):
+    def draw_map_back(self, mapIn : Map, surface : pygame.Surface, active=True):
         offset_x = self.calc_x_offset() + surface.get_width()/2
         offset_y = -self.player.y  + surface.get_height()/2
         # offset_x = -self.player.x
@@ -86,7 +95,7 @@ class Level(State):
         mapIn.draw_background(surface, offset_x, offset_y)
         mapIn.draw_platforms(surface, offset_x, offset_y)
         # mapIn.draw_foreground(surface, offset_x, offset_y)
-        mapIn.draw_masks(surface, offset_x, offset_y)
+        mapIn.draw_masks(surface, offset_x, offset_y, active)
     
     def draw_map_front(self, mapIn : Map, surface : pygame.Surface):
         offset_x = self.calc_x_offset() + surface.get_width()/2
@@ -130,6 +139,7 @@ class Level(State):
         self.draw_map_front(self.map_next, surface)
 
         render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score} / {self.mask_goal}", pygame.Color(255, 255, 255))
+        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"]+self.game_config_data["fontsize"], f"Platform {self.platforms_passed}", pygame.Color(255, 255, 255))
 
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions_current = self.map_current.check_collisions(player_colliders)
@@ -140,10 +150,18 @@ class Level(State):
         self.player.hit_top = player_map_collisions_current[2] or player_map_collisions_next[2] or player_map_collisions_prev[2]
         self.player.grounded = player_map_collisions_current[3] or player_map_collisions_next[3] or player_map_collisions_prev[3]
 
-        self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
+        current_score_up = self.map_current.check_mask_collisions(self.player.get_bounding_box())
+        if self.map_current.end and current_score_up > 0:
+            self.level_over = True
+        else:
+            self.score += current_score_up
+        self.score += self.map_previous.check_mask_collisions(self.player.get_bounding_box())
 
         powerups_hit = self.map_current.check_powerup_collisions(self.player.get_bounding_box())
         [self.player.apply_powerup(p) for p in powerups_hit]
+        powerups_hit = self.map_previous.check_powerup_collisions(self.player.get_bounding_box())
+        [self.player.apply_powerup(p) for p in powerups_hit]
+        
 
         if self.map_current.check_enemy_collisions(self.player.get_bounding_box()):
             self.level_over = True
@@ -161,4 +179,4 @@ class Level(State):
         self.player.hit_edge = self.cam_x-self.player.x > surface.get_width()/2
 
         # here's that debug gore statement
-        render_text(surface, 0, 50, f"col: {player_map_collisions_current}", pygame.Color(255, 0, 0))
+        # render_text(surface, 0, 50, f"col: {player_map_collisions_current}", pygame.Color(255, 0, 0))

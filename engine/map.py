@@ -106,7 +106,9 @@ class Tile:
         return [self.x, self.y]
 
 class Map:
-    def __init__(self, level_config_file, data_dir, x_offset):
+    def __init__(self, level_config_file, data_dir, x_offset, end=False):
+        self.end = end
+        
         with open(level_config_file, 'r') as f:
             self.config_data = json.load(f)
         
@@ -145,9 +147,10 @@ class Map:
     def draw_background(self, surf : pygame.Surface, x_off, y_off):
         draw_tiles(self.background, surf, x_off, y_off)
     
-    def draw_masks(self, surf : pygame.Surface, x_off, y_off):
-        for mask in self.masks:
-            mask.draw_to_surface(surf, x_off, y_off)
+    def draw_masks(self, surf : pygame.Surface, x_off, y_off, active):
+        if active:
+            for mask in self.masks:
+                mask.draw_to_surface(surf, x_off, y_off)
         for powerup in self.powerups:
             powerup.draw_to_surface(surf, x_off, y_off)
         for enemy in self.enemies:
