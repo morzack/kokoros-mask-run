@@ -1,14 +1,14 @@
 {
-    "width" : 70,
-    "height" : 70,
+    "width" : 60,
+    "height" : 60,
 
     "maxlateralspeed" : 15, 
     "maxverticalspeed" : 15,
     "lateralacceleration" : 1,
     "friction" : 0.85,
     "gravity" : 0.4,
-    "jumppower" : 12.5,
-    "collideroffset" : 12,
+    "jumppower" : 11,
+    "collideroffset" : 5,
     "framerate" : 10,
 
     "image" : "gamedata/player/animations/walking/0.png",

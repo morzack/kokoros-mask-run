@@ -38,9 +38,11 @@ class Kokoro:
         self.hit_right = False
         self.hit_top = False
 
+        self.hit_edge = False
+
         self.currentEffects = {"speed":0}
 
-    def draw_to_surface(self, surface : pygame.Surface, current_time):
+    def draw_to_surface(self, surface : pygame.Surface, current_time, x_off):
         if abs(self.dx) > self.player_config_data["lateralacceleration"]:
             f = self.framerate
 
@@ -59,7 +61,7 @@ class Kokoro:
 
         if not self.facing_right:
             i = pygame.transform.flip(i, True, False)
-        surface.blit(i, (surface.get_width()/2, self.player_config_data["bottomoffset"]+surface.get_height()/2))
+        surface.blit(i, (surface.get_width()/2-x_off, self.player_config_data["bottomoffset"]+surface.get_height()/2))
         # surface.blit(i, (self.x, self.y)) # don't want this because kokoro should stay in the center
 
     def get_bounding_box(self):
@@ -68,21 +70,29 @@ class Kokoro:
     def get_left_collider(self):
         bb = self.get_bounding_box()
         bb.x -= self.player_config_data["collideroffset"]
+        bb.height -= self.player_config_data["collideroffset"]*2
+        bb.y += self.player_config_data["collideroffset"]
         return bb
     
     def get_right_collider(self):
         bb = self.get_bounding_box()
         bb.x += self.player_config_data["collideroffset"]
+        bb.height -= self.player_config_data["collideroffset"]*2
+        bb.y += self.player_config_data["collideroffset"]
         return bb
 
     def get_top_collider(self):
         bb = self.get_bounding_box()
         bb.y -= self.player_config_data["collideroffset"]
+        bb.width -= self.player_config_data["collideroffset"]*2
+        bb.x += self.player_config_data["collideroffset"]
         return bb
     
     def get_bottom_collider(self):
         bb = self.get_bounding_box()
-        bb.y += self.player_config_data["collideroffset"]
+        bb.y += self.player_config_data["collideroffset"]*2
+        bb.width -= self.player_config_data["collideroffset"]*2
+        bb.x += self.player_config_data["collideroffset"]
         return bb
 
     def apply_powerup(self, powerup : Powerup):
@@ -96,9 +106,9 @@ class Kokoro:
             self.currentEffects[k] -= 1
 
         # update the position and stuff
-        if keys_pressed["left"] and self.grounded:
+        if keys_pressed["left"] and not self.hit_edge and not self.hit_left:
             self.dx -= self.player_config_data["lateralacceleration"]*speed_modifier
-        if keys_pressed["right"] and self.grounded:
+        if keys_pressed["right"] and not self.hit_right:
             self.dx += self.player_config_data["lateralacceleration"]*speed_modifier
 
         # janky lol
@@ -108,15 +118,15 @@ class Kokoro:
             self.dy = 0
         if self.grounded and keys_pressed["up"]:
             self.dy -= self.player_config_data["jumppower"]
-        if self.hit_left and self.dx < 0:
+        if (self.hit_left or self.hit_edge) and self.dx < 0:
             self.dx = 0
         if self.hit_right and self.dx > 0:
             self.dx = 0
         if self.hit_top and self.dy < 0:
-            self.dy = 1
+            self.dy = 0
 
-        if self.grounded:
-            self.dx *= self.player_config_data["friction"]
+        # if self.grounded:
+        self.dx *= self.player_config_data["friction"]
         
         # clamp speed in a shitty way because why not
         m_speed = self.player_config_data["maxlateralspeed"]

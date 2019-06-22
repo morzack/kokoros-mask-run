@@ -1,6 +1,6 @@
 {
     "map_parts" : [
-        "gamedata/levels/testlevel/mapParts/template"
+        "gamedata/levels/testlevel/mapParts/mario1"
     ],
     "tileatlas" : "gamedata/assets/tiles/town",
     

@@ -132,6 +132,7 @@ class Map:
         self.enemies = array_to_enemies(enemy_data, x_offset)
 
         self.width = len(foreground_data[0])*w
+        self.height = len(foreground_data)*h
 
         self.x = x_offset
 

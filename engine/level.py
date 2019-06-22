@@ -61,6 +61,8 @@ class Level(State):
 
         self.level_over = False
 
+        self.cam_x = self.player.x
+
     def cycle_map(self):
         self.map_previous = self.map_current
         self.map_current = self.map_next
@@ -73,8 +75,11 @@ class Level(State):
         """
         pass
 
+    def calc_x_offset(self):
+        return -(self.cam_x-self.cam_x%2)
+
     def draw_map_back(self, mapIn : Map, surface : pygame.Surface):
-        offset_x = -(self.player.x-self.player.x%2) + surface.get_width()/2
+        offset_x = self.calc_x_offset() + surface.get_width()/2
         offset_y = -self.player.y  + surface.get_height()/2
         # offset_x = -self.player.x
         # offset_y = -self.player.y
@@ -84,7 +89,7 @@ class Level(State):
         mapIn.draw_masks(surface, offset_x, offset_y)
     
     def draw_map_front(self, mapIn : Map, surface : pygame.Surface):
-        offset_x = -(self.player.x-self.player.x%2) + surface.get_width()/2
+        offset_x = self.calc_x_offset() + surface.get_width()/2
         offset_y = -self.player.y  + surface.get_height()/2
         # offset_x = -self.player.x
         # offset_y = -self.player.y
@@ -98,23 +103,18 @@ class Level(State):
         """
         update the level and components or whatever
         """
-        # lul
-        keys_pressed["right"] = True
-
-        if keys_pressed["down"]:
-            self.level_over = True
         if self.player.x > self.current_map_offset:
             self.cycle_map()
         
         # the things here remain in the same place on the screen at all times
         staticSurface = make_new_transparent_surface(surface)
-        self.player.draw_to_surface(staticSurface, current_time)
+        self.player.draw_to_surface(staticSurface, current_time, self.cam_x-self.player.x)
         self.player.update(keys_pressed)
 
         self.score_mask.draw_to_surface(staticSurface, 0, 0)
         
         # combine the previously created surfaces
-        scaled_player_x = self.player.x * self.level_config_data["scrollratio"]
+        scaled_player_x = self.cam_x * self.level_config_data["scrollratio"]
         scaled_player_x = scaled_player_x % self.background.get_width()
         surface.blit(self.background, (-scaled_player_x, 0))
         surface.blit(self.background, (-scaled_player_x+self.background.get_width(), 0))
@@ -134,10 +134,11 @@ class Level(State):
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions_current = self.map_current.check_collisions(player_colliders)
         player_map_collisions_next = self.map_next.check_collisions(player_colliders)
-        self.player.hit_left = player_map_collisions_current[0] or player_map_collisions_next[0]
-        self.player.hit_right = player_map_collisions_current[1] or player_map_collisions_next[1]
-        self.player.hit_top = player_map_collisions_current[2] or player_map_collisions_next[2]
-        self.player.grounded = player_map_collisions_current[3] or player_map_collisions_next[3]
+        player_map_collisions_prev = self.map_previous.check_collisions(player_colliders)
+        self.player.hit_left = player_map_collisions_current[0] or player_map_collisions_next[0] or player_map_collisions_prev[0]
+        self.player.hit_right = player_map_collisions_current[1] or player_map_collisions_next[1] or player_map_collisions_prev[1]
+        self.player.hit_top = player_map_collisions_current[2] or player_map_collisions_next[2] or player_map_collisions_prev[2]
+        self.player.grounded = player_map_collisions_current[3] or player_map_collisions_next[3] or player_map_collisions_prev[3]
 
         self.score += self.map_current.check_mask_collisions(self.player.get_bounding_box())
 
@@ -147,10 +148,17 @@ class Level(State):
         if self.map_current.check_enemy_collisions(self.player.get_bounding_box()):
             self.level_over = True
 
+        if self.player.y > self.map_current.height:
+            self.level_over = True
+
         completion_percent = self.score/self.mask_goal
         if completion_percent >= 1:
             # yay, you won. good job.
             pass
+
+        self.cam_x = max(self.cam_x, self.player.x)
+
+        self.player.hit_edge = self.cam_x-self.player.x > surface.get_width()/2
 
         # here's that debug gore statement
         render_text(surface, 0, 50, f"col: {player_map_collisions_current}", pygame.Color(255, 0, 0))

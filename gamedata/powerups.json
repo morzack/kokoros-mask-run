@@ -9,7 +9,7 @@
     "powerups" : [
         {
             "name" : "speed",
-            "duration" : 300,
+            "duration" : 60,
             "image" : "gamedata/assets/powerups/red_speed.png",
             "effect" : "speed"
         }
