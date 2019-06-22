@@ -54,6 +54,8 @@ class Level(State):
 
         self.mask_goal = self.game_config_data["maskgoal"]
 
+        self.level_over = False
+
     def cycle_map(self):
         self.map_previous = self.map_current
         self.map_current = self.map_next
@@ -91,6 +93,8 @@ class Level(State):
         """
         update the level and components or whatever
         """
+        if keys_pressed["down"]:
+            self.level_over = True
         if self.player.x > self.current_map_offset:
             self.cycle_map()
         

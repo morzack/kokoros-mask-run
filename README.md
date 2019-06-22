@@ -1,5 +1,7 @@
 # kokoros-mask-run
 
+![title image](gamedata/titleimage.png)
+
 Entry for Touhou Game Jam 4
 
 Hata no Kokoro has lost _all_ of her masks, now she has to run through Gensokyo to retrieve them!

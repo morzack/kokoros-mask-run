@@ -5,6 +5,7 @@ import json
 from .userinput import get_input
 from .level import Level
 from .ui import render_text
+from .menu import Menu
 
 def main():
     pygame.init()
@@ -21,10 +22,13 @@ def main():
 
     frame = 0
 
-    test_level = Level("testlevel")    
+    test_level = Menu("title") # Level("testlevel")
 
     running = True
     while running:
+        for event in pygame.event.get():
+            test_level.process_event(event)
+            
         keys_pressed = get_input()
 
         if keys_pressed["quit"]:
