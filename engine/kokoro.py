@@ -24,6 +24,15 @@ class Kokoro:
         self.image = pygame.image.load(self.player_config_data["image"])
         self.image = pygame.transform.scale(self.image, (self.player_config_data["width"], self.player_config_data["height"]))
 
+        self.walking_frames = []
+        for i in range(self.player_config_data["animations"]["walking"]):
+            im = pygame.image.load(f"gamedata/player/animations/walking/{i}.png")
+            im = pygame.transform.scale(im, (self.player_config_data["width"], self.player_config_data["height"]))
+            self.walking_frames.append(im)
+        
+        self.framerate = self.player_config_data["framerate"]
+        self.last_frame = 0
+
         self.grounded = False
         self.hit_left = False
         self.hit_right = False
@@ -31,10 +40,24 @@ class Kokoro:
 
         self.currentEffects = {"speed":0}
 
-    def draw_to_surface(self, surface : pygame.Surface):
-        # TODO this should be updated when animations are a thing because those are useful/important
-        i = self.image
-        if self.facing_right:
+    def draw_to_surface(self, surface : pygame.Surface, current_time):
+        if abs(self.dx) > self.player_config_data["lateralacceleration"]:
+            f = self.framerate
+
+            if self.currentEffects["speed"] > 0:
+                f /= 2
+            if not self.grounded:
+                f *= 3
+
+            if current_time % f == 0:
+                self.last_frame += 1
+                if self.last_frame >= len(self.walking_frames):
+                    self.last_frame = 0
+            i = self.walking_frames[self.last_frame]
+        else:
+            i = self.image
+
+        if not self.facing_right:
             i = pygame.transform.flip(i, True, False)
         surface.blit(i, (surface.get_width()/2, surface.get_height()/2))
         # surface.blit(i, (self.x, self.y)) # don't want this because kokoro should stay in the center

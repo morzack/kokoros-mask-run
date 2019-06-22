@@ -52,6 +52,8 @@ class Level(State):
         self.score = 0
         self.score_mask = Mask(self.game_config_data["scoreX"], self.game_config_data["scoreY"])
 
+        self.mask_goal = self.game_config_data["maskgoal"]
+
     def cycle_map(self):
         self.map_previous = self.map_current
         self.map_current = self.map_next
@@ -94,7 +96,7 @@ class Level(State):
         
         # the things here remain in the same place on the screen at all times
         staticSurface = make_new_transparent_surface(surface)
-        self.player.draw_to_surface(staticSurface)
+        self.player.draw_to_surface(staticSurface, current_time)
         self.player.update(keys_pressed)
 
         self.score_mask.draw_to_surface(staticSurface, 0, 0)
@@ -112,7 +114,7 @@ class Level(State):
         self.draw_map_front(self.map_current, surface)
         self.draw_map_front(self.map_next, surface)
 
-        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score}", pygame.Color(255, 0, 0))
+        render_text(surface, self.score_mask.x+self.score_mask.w, self.game_config_data["scoreTextOffsetY"], f"{self.score} / {self.mask_goal}", pygame.Color(255, 0, 0))
 
         player_colliders = [self.player.get_left_collider(), self.player.get_right_collider(), self.player.get_top_collider(), self.player.get_bottom_collider()]
         player_map_collisions_current = self.map_current.check_collisions(player_colliders)
@@ -126,6 +128,11 @@ class Level(State):
 
         powerups_hit = self.map_current.check_powerup_collisions(self.player.get_bounding_box())
         [self.player.apply_powerup(p) for p in powerups_hit]
+
+        completion_percent = self.score/self.mask_goal
+        if completion_percent >= 1:
+            # yay, you won. good job.
+            pass
 
         # here's that debug gore statement
         # render_text(surface, 0, 50, f"col: {1}", pygame.Color(255, 0, 0))

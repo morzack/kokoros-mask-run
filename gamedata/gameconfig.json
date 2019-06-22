@@ -9,5 +9,7 @@
 
     "scoreX" : 10,
     "scoreY" : 10,
-    "scoreTextOffsetY" : 15
+    "scoreTextOffsetY" : 15,
+    
+    "maskgoal" : 66
 }

@@ -1,5 +1,5 @@
 {
-    "width" : 60,
+    "width" : 80,
     "height" : 80,
 
     "maxlateralspeed" : 10, 
@@ -9,6 +9,11 @@
     "gravity" : 0.4,
     "jumppower" : 30,
     "collideroffset" : 12,
+    "framerate" : 10,
 
-    "image" : "gamedata/player/kokoro.png"
+    "image" : "gamedata/player/animations/walking/0.png",
+
+    "animations" : {
+        "walking" : 8
+    }
 }
