@@ -8,6 +8,7 @@ from .ui import render_text
 from .menu import Menu
 
 def main():
+
     pygame.init()
 
     game_config_file = f"gamedata/gameconfig.json"
@@ -20,9 +21,16 @@ def main():
 
     clock = pygame.time.Clock()
 
+    try:
+        pygame.mixer.music.load(game_config_data["bgm"])
+        pygame.mixer.music.play()
+    except:
+        print("If you're using Linux audio -- best of luck.")
+        print("Something's up with the audio right now.")
+
     frame = 0
 
-    test_level = Menu("title") # Level("testlevel")
+    test_level = Menu("title")
 
     running = True
     while running:

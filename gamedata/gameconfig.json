@@ -11,5 +11,7 @@
     "scoreY" : 10,
     "scoreTextOffsetY" : 15,
     
-    "maskgoal" : 3
+    "maskgoal" : 66,
+
+    "bgm" : "gamedata/assets/lost emotion.wav"
 }
