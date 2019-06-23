@@ -15,7 +15,7 @@ Definitely not a stretch :P.
 
 ## Goals
 
-* [ ] shitty art
-* [ ] tight controls
-* [ ] arcade esque
+* [X] shitty art
+* [X] tight controls
+* [X] arcade esque
 * [ ] repeatable and _fun_

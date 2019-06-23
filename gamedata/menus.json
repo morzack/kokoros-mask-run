@@ -21,6 +21,7 @@
     "testlevel" : {
         "flags" : ["level"],
         "name" : "testlevel",
-        "image_location" : "gamedata/testbackground.png"
+        "image_location" : "gamedata/scorebackground.png",
+        "alt_image_location" : "gamedata/kokorohappy.png"
     }
 }

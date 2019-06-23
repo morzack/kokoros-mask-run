@@ -26,6 +26,8 @@ class Menu(State):
 
         self.ismenu = "menu" in self.menu_config["flags"]
 
+        self.alt_image_loaded = False
+
         self.isimage = "title_image" in self.menu_config["flags"]
 
         if self.ismenu:
@@ -99,8 +101,14 @@ class Menu(State):
                 else:
                     r, g, b = self.score_config["color"]
                     score_color = pygame.Color(r, g, b)
-                    render_text(surface, self.score_config["xpaddingover"], self.score_config["ypaddingover"], "Game over", score_color)
-                    render_text(surface, self.score_config["ypaddingscore"]+self.score_config["xpaddingover"], self.score_config["ypaddingscore"]+self.score_config["ypaddingover"], f"Your score: {self.level.score}", score_color)
+                    render_text(surface, self.score_config["xpaddingover"], self.score_config["ypaddingover"], "Game over.", score_color)
+                    render_text(surface, self.score_config["xpaddingscore"]+self.score_config["xpaddingover"], self.score_config["ypaddingscore"]+self.score_config["ypaddingover"], f"Masks found: {self.level.score}/{self.level.mask_goal}", score_color)
+                    render_text(surface, self.score_config["xpaddingscore"]+self.score_config["xpaddingover"], self.score_config["ypaddingscore"]*2+self.score_config["ypaddingover"], f"Platforms traversed: {self.level.platforms_passed}", score_color)
+                    
+                    if self.level.completed:
+                        render_text(surface, self.score_config["xpaddingscore"] + self.score_config["xpaddingover"], self.score_config["ypaddingscore"]*3+self.score_config["ypaddingover"], f"Congrats on collecting all the masks!", score_color)
+                        self.image = pygame.image.load(self.menu_config["alt_image_location"]).convert()
+                        self.alt_image_loaded = True
 
                     if keys_pressed["enter"]:
                         self.done = True

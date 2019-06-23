@@ -17,6 +17,8 @@ class Level(State):
         """
         super().__init__()
         self.name = level_name
+
+        self.completed = False
         
         # load config stuff
         self.level_dir = f"gamedata/levels/{self.name}"
@@ -172,7 +174,7 @@ class Level(State):
         completion_percent = self.score/self.mask_goal
         if completion_percent >= 1:
             # yay, you won. good job.
-            pass
+            self.completed = True
 
         self.cam_x = max(self.cam_x, self.player.x)
 

@@ -4,14 +4,14 @@
     "title" : "Kokoro's Mask Run!",
     "targetFPS" : 60,
 
-    "fontname" : "DejaVu Sans, Arial",
+    "fontname" : "Comic Sans MS, undefined, DejaVu Sans, Arial",
     "fontsize" : 40,
 
     "scoreX" : 10,
     "scoreY" : 10,
     "scoreTextOffsetY" : 15,
     
-    "maskgoal" : 66,
+    "maskgoal" : 3,
 
     "bgm" : "gamedata/assets/lost emotion.wav"
 }
