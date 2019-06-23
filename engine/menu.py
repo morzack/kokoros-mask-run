@@ -3,6 +3,7 @@ import pygame
 from .state import State
 from .ui import render_text
 from .level import Level
+from .story import Story
 
 import json
 
@@ -23,6 +24,8 @@ class Menu(State):
         
         # load this as a level if this is the case
         self.islevel = "level" in self.menu_config["flags"]
+
+        self.isstory = "story" in self.menu_config["flags"]
 
         self.ismenu = "menu" in self.menu_config["flags"]
 
@@ -49,9 +52,14 @@ class Menu(State):
 
             with open(f"gamedata/scoreconfig.json", 'r') as f:
                 self.score_config = json.load(f)
+        
+        if self.isstory:
+            self.level = Story(self.menu_config["imagedir"])
 
     def process_event(self, event : pygame.event.EventType):
         if not self.next_state_active:
+            if self.isstory:
+                self.level.process_event(event)
             if event.type == pygame.KEYDOWN:
                 if self.ismenu:
                     if event.key == pygame.K_UP:
@@ -112,6 +120,11 @@ class Menu(State):
 
                     if keys_pressed["enter"]:
                         self.done = True
+            if self.isstory:
+                if not self.level.level_over:
+                    self.level.update(surface, keys_pressed, current_time)
+                else:
+                    self.done = True
 
         elif self.next_menu_object != None:
             self.next_menu_object.update(surface, keys_pressed, current_time)

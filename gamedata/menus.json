@@ -7,21 +7,27 @@
     "main menu" : {
         "flags" : ["menu"],
         "options" : {
-            "Test Level" : "testlevel",
-            "Other Level" : "testlevel"
+            "Play Game" : "testlevel",
+            "Story" : "story"
         },
         "textsize" : 50,
         "textpadding" : 20,
         "ypadding" : 200,
-        "xpadding" : 300,
+        "xpadding" : 200,
         "textcolor" : [1, 3, 3],
         "boxcolor" : [24, 102, 100],
-        "image_location" : "gamedata/testbackground.png"
+        "image_location" : "gamedata/scorebackground.png"
     },
     "testlevel" : {
         "flags" : ["level"],
         "name" : "testlevel",
         "image_location" : "gamedata/scorebackground.png",
         "alt_image_location" : "gamedata/kokorohappy.png"
+    },
+    "story" : {
+        "flags" : ["story"],
+        "name" : "storylevel",
+        "imagedir" : "gamedata/storyconfig.json",
+        "image_location" : "gamedata/testbackground.png"
     }
 }
