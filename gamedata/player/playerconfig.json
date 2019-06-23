@@ -6,7 +6,7 @@
     "bboxheight" : 40,
 
     "maxlateralspeed" : 15, 
-    "maxverticalspeed" : 15,
+    "maxverticalspeed" : 11,
     "lateralacceleration" : 1,
     "friction" : 0.85,
     "gravity" : 0.4,

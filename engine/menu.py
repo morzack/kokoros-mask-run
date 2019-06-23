@@ -114,7 +114,7 @@ class Menu(State):
                     render_text(surface, self.score_config["xpaddingscore"]+self.score_config["xpaddingover"], self.score_config["ypaddingscore"]*2+self.score_config["ypaddingover"], f"Platforms traversed: {self.level.platforms_passed}", score_color)
                     
                     if self.level.completed:
-                        render_text(surface, self.score_config["xpaddingscore"] + self.score_config["xpaddingover"], self.score_config["ypaddingscore"]*3+self.score_config["ypaddingover"], f"Congrats on collecting all the masks!", score_color)
+                        render_text(surface, self.score_config["xpaddingscore"] + self.score_config["xpaddingover"], self.score_config["ypaddingscore"]*3+self.score_config["ypaddingover"], f"Nice, you collected all the masks!", score_color)
                         self.image = pygame.image.load(self.menu_config["alt_image_location"]).convert()
                         self.alt_image_loaded = True
 

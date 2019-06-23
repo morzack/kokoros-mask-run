@@ -42,6 +42,8 @@ class Kokoro:
 
         self.currentEffects = {"speed":0}
 
+        self.jumped_last = False
+
     def draw_to_surface(self, surface : pygame.Surface, current_time, x_off):
         if abs(self.dx) > self.player_config_data["lateralacceleration"]:
             f = self.framerate
@@ -116,8 +118,9 @@ class Kokoro:
             self.dy += self.player_config_data["gravity"]
         if self.grounded and self.dy > 0:
             self.dy = 0
-        if self.grounded and keys_pressed["up"]:
+        if self.grounded and keys_pressed["up"] and not self.jumped_last:
             self.dy -= self.player_config_data["jumppower"]
+            self.jumped_last = True
         if (self.hit_left or self.hit_edge) and self.dx < 0:
             self.dx = 0
         if self.hit_right and self.dx > 0:
@@ -126,6 +129,9 @@ class Kokoro:
             self.dy = 0
         if self.hit_left and self.hit_right:
             self.dx = -1
+
+        if self.jumped_last:
+            self.jumped_last = False
 
         # if self.grounded:
         self.dx *= self.player_config_data["friction"]
