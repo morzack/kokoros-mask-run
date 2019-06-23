@@ -17,6 +17,7 @@ def main():
 
     screen = pygame.display.set_mode((game_config_data["width"], game_config_data["height"]))
     pygame.display.set_caption(game_config_data["title"])
+    pygame.display.set_icon(pygame.image.load(game_config_data["icon"]).convert())
 
     clock = pygame.time.Clock()
 

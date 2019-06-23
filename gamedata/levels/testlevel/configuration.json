@@ -12,7 +12,11 @@
         "gamedata/levels/testlevel/mapParts/10",
         "gamedata/levels/testlevel/mapParts/11",
         "gamedata/levels/testlevel/mapParts/12",
-        "gamedata/levels/testlevel/mapParts/13"
+        "gamedata/levels/testlevel/mapParts/13",
+        "gamedata/levels/testlevel/mapParts/14",
+        "gamedata/levels/testlevel/mapParts/15",
+        "gamedata/levels/testlevel/mapParts/16",
+        "gamedata/levels/testlevel/mapParts/17"
     ],
     "blankmap" : "gamedata/levels/testlevel/mapParts/blankmap",
     "startmap" : "gamedata/levels/testlevel/mapParts/startmap",
